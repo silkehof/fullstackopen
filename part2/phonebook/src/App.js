@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import personsService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -11,35 +11,35 @@ const App = () => {
   const [filterValue, setFilterValue] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+  useEffect(() => {
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
-  }
+  }, [])
 
-  useEffect(hook, [])
-
-  const addName = (event) => {
+  const addPerson = (event) => {
     event.preventDefault()
-    const nameObject = {
+    const personObject = {
       name: newName,
       number: newNumber
     }
 
     for (let i = 0; i < persons.length; i++) {
-      if (persons[i].name.toUpperCase() === nameObject.name.toUpperCase()) {
+      if (persons[i].name.toUpperCase() === personObject.name.toUpperCase()) {
         window.alert(`${newName} is already added to phonebook!`)
         return
       }
     }
-
-    setPersons(persons.concat(nameObject))
-    setNewName('')
-    setNewNumber('')
+    
+    personsService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleNameChange = (event) => {
@@ -71,7 +71,7 @@ const App = () => {
         handleFilterChange={handleFilterChange}/>
       <h2>Add new entry</h2>
       <PersonForm 
-        addName={addName}
+        addPerson={addPerson}
         newName={newName}
         handleNameChange={handleNameChange}
         newNumber={newNumber}
