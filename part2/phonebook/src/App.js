@@ -3,7 +3,8 @@ import PersonsService from './services/PersonsService'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
-import Notification from './components/Notification'
+import ConfirmationNotification from './components/ConfirmationNotification'
+import ErrorNotification from './components/ErrorNotification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,6 +13,7 @@ const App = () => {
   const [filterValue, setFilterValue] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [confirmationMessage, setConfirmationMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     PersonsService
@@ -65,9 +67,12 @@ const App = () => {
           setNewNumber('')
         })
         .catch(error => {
-          alert(
-            `The contact ${person.name} has already been deleted from the phonebook.`
+          setErrorMessage(
+            `Oh no! The phonebook entry for '${person.name}' was already removed from the server.`
           )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
           setPersons(persons.filter(p => p.id !== id))
           setNewName('')
           setNewNumber('')
@@ -111,10 +116,11 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={confirmationMessage}/>
+      <ConfirmationNotification message={confirmationMessage} />
+      <ErrorNotification message={errorMessage} />
       <Filter 
         filterValue={filterValue}
-        handleFilterChange={handleFilterChange}/>
+        handleFilterChange={handleFilterChange} />
       <h2>Add new entry</h2>
       <PersonForm 
         addPerson={addPerson}
