@@ -28,7 +28,7 @@ const App = () => {
 
     for (let i = 0; i < persons.length; i++) {
       if (persons[i].name.toUpperCase() === personObject.name.toUpperCase()) {
-        window.alert(`${newName} is already added to phonebook!`)
+        updatePerson(persons[i].id)
         return
       }
     }
@@ -40,6 +40,29 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+  }
+
+  const updatePerson = id => { //old entry's id!
+    const person = persons.find(p => p.id === id)
+    const changedPerson = { ...person, number: newNumber }
+
+    if (window.confirm(`Do you want to update the contact ${person.name} with a new number?`)) {
+      PersonsService
+        .update(id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => {
+          alert(
+            `The contact ${person.name} has already been deleted from the phonebook.`
+          )
+          setPersons(persons.filter(p => p.id !== id))
+          setNewName('')
+          setNewNumber('')
+        })
+    }
   }
 
   const removePerson = id => {
