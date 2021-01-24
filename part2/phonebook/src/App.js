@@ -11,7 +11,6 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterValue, setFilterValue] = useState('')
-  const [showAll, setShowAll] = useState(true)
   const [confirmationMessage, setConfirmationMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -47,6 +46,13 @@ const App = () => {
         }, 5000)
         setNewName('')
         setNewNumber('')
+      })
+      .catch(error => {
+        const message = error.response.data
+        setErrorMessage(`${message.error}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
   }
 
@@ -104,12 +110,9 @@ const App = () => {
   
   const handleFilterChange = (event) => {
     setFilterValue(event.target.value)
-    if (filterValue !== '') {
-      setShowAll(false)
-    }
   }
 
-  const personsToShow =  showAll
+  const personsToShow = filterValue === ''
     ? persons
     : persons.filter(person => person.name.toUpperCase().includes(filterValue.toUpperCase()))
 
