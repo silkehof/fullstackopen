@@ -53,6 +53,23 @@ test('the unique identifier property of blog posts is named id', async () => {
     expect(blogsAtEnd[blogsAtEnd.length-1].id).toBeDefined()
 })
 
+test('a missing likes property defaults to the value 0', async () => {
+    const newBlog = {
+        title: 'Writing tests is fun',
+        author: 'Bob the Writer',
+        url: 'www.bob.de',
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
+})
+
 
 
 afterAll(() => {
