@@ -24,6 +24,26 @@ test('all blogs are returned as json', async () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length)    
 })
 
+test('a valid blog can be added', async () => {
+    const newBlog = {
+        title: 'Writing tests is fun',
+        author: 'Bob the Writer',
+        url: 'www.bob.de',
+        likes: 5
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+    expect(blogsAtEnd[blogsAtEnd.length-1]).toMatchObject(newBlog)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
