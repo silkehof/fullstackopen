@@ -44,6 +44,17 @@ test('a valid blog can be added', async () => {
     expect(blogsAtEnd[blogsAtEnd.length-1]).toMatchObject(newBlog)
 })
 
+test('the unique identifier property of blog posts is named id', async () => {
+    await api 
+        .get('/api/blogs')
+        .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[blogsAtEnd.length-1].id).toBeDefined()
+})
+
+
+
 afterAll(() => {
     mongoose.connection.close()
 })
