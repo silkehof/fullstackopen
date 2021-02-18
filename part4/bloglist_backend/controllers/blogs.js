@@ -18,7 +18,11 @@ blogsRouter.post('/', (request, response) => {
     blog
         .save()
         .then(result => {
-            response.status(201).json(result)
+            if (blog.url === undefined || blog.title === undefined) {
+                response.status(400).json(result)
+            } else {
+                response.status(201).json(result)
+            }
         })
 })
 

@@ -70,6 +70,17 @@ test('a missing likes property defaults to the value 0', async () => {
     expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
 })
 
+test('a request missing title and url properties is responded to with status code 400', async () => {
+    const newBlog = {
+        author: 'Bob the Writer',
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+})
 
 
 afterAll(() => {
