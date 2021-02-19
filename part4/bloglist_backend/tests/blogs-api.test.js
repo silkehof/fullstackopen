@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const helper = require('./test-helper')
 const app = require('../app')
-
 const api = supertest(app)
+
 const Blog = require('../models/blog')
 
 beforeEach(async () => {
@@ -15,73 +15,107 @@ beforeEach(async () => {
     await Promise.all(promiseArray)
 })
 
-test('all blogs are returned as json', async () => {
-    const response = await api
-        .get('/api/blogs')
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-    
-    expect(response.body).toHaveLength(helper.initialBlogs.length)    
+describe('when some blogs are initially saved', () => {
+    test('all blogs are returned as json', async () => {
+        const response = await api
+            .get('/api/blogs')
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        expect(response.body).toHaveLength(helper.initialBlogs.length)    
+    })
+
+    test('the unique identifier property of blog posts is named id', async () => {
+        await api
+            .get('/api/blogs')
+            .expect(200)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd[blogsAtEnd.length - 1].id).toBeDefined()
+    })
 })
 
-test('a valid blog can be added', async () => {
-    const newBlog = {
-        title: 'Writing tests is fun',
-        author: 'Bob the Writer',
-        url: 'www.bob.de',
-        likes: 5
-    }
+describe('addition of a new blog', () => {
+    test('succeeds with valid data', async () => {
+        const newBlog = {
+            title: 'Writing tests is fun',
+            author: 'Bob the Writer',
+            url: 'www.bob.de',
+            likes: 5
+        }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
-    const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-    expect(blogsAtEnd[blogsAtEnd.length-1]).toMatchObject(newBlog)
+        expect(blogsAtEnd[blogsAtEnd.length - 1]).toMatchObject(newBlog)
+    })
+
+    test('a missing likes property defaults to the value 0', async () => {
+        const newBlog = {
+            title: 'Writing tests is fun',
+            author: 'Bob the Writer',
+            url: 'www.bob.de',
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
+    })
+
+    test('fails with status code 400 if url or title are missing', async () => {
+        const newBlog = {
+            author: 'Bob the Writer',
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+    })
 })
 
-test('the unique identifier property of blog posts is named id', async () => {
-    await api 
-        .get('/api/blogs')
-        .expect(200)
+describe('update a blog', () => {
+    test('likes propery of a blog is updated', async () => {
+        const newLikes = {
+            likes: 10
+        }
 
-    const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd[blogsAtEnd.length-1].id).toBeDefined()
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(newLikes)
+    })
 })
 
-test('a missing likes property defaults to the value 0', async () => {
-    const newBlog = {
-        title: 'Writing tests is fun',
-        author: 'Bob the Writer',
-        url: 'www.bob.de',
-    }
+describe('deletion of a blog', () => {
+    test('succeeds with status code 204 if id is valid', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
 
-    const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd).toHaveLength(
+            helper.initialBlogs.length - 1
+        )
+    })
 })
-
-test('a request missing title and url properties is responded to with status code 400', async () => {
-    const newBlog = {
-        author: 'Bob the Writer',
-    }
-
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-})
-
 
 afterAll(() => {
     mongoose.connection.close()
