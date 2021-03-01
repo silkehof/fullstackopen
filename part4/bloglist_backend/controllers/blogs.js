@@ -12,7 +12,7 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     const body = request.body 
     
-    const user = await User.findById(body.userId)
+    const user = await User.findOne()
 
     const blog = new Blog({
         title: body.title,
@@ -24,7 +24,7 @@ blogsRouter.post('/', async (request, response) => {
     const savedBlog = await blog.save()
     
     if (blog.url === undefined || blog.title === undefined) {
-        response.status(400).end()
+        response.status(400).json({ error: 'url or title missing'})
     } else {
         user.blogs = user.blogs.concat(savedBlog._id)
         await user.save()

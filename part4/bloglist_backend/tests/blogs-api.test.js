@@ -44,6 +44,7 @@ describe('addition of a new blog', () => {
             author: 'Bob the Writer',
             url: 'www.bob.de',
             likes: 5
+
         }
 
         await api
@@ -151,7 +152,7 @@ describe('when there is initially one user in db', () => {
         expect(usernames).toContain(newUser.username)
     })
 
-    test('creation fails with proper statuscode and message if username already taken', async () => {
+    test('creation fails with proper status code and error message if username already taken', async () => {
         const usersAtStart = await helper.usersInDb()
 
         const newUser = {
@@ -167,6 +168,48 @@ describe('when there is initially one user in db', () => {
             .expect('Content-Type', /application\/json/)
 
         expect(result.body.error).toContain('`username` to be unique')
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+
+    test('creation fails with proper status code and message if username is invalid', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'ro',
+            name: 'Superuser',
+            password: 'salainen',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('is shorter than the minimum allowed length')
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+
+    test('creation fails with proper status code and message if password is invalid', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'miko',
+            name: 'Superuser',
+            password: 'sa',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('invalid password')
 
         const usersAtEnd = await helper.usersInDb()
         expect(usersAtEnd).toHaveLength(usersAtStart.length)
