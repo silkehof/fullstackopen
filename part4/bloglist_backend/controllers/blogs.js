@@ -25,21 +25,20 @@ blogsRouter.post('/', async (request, response) => {
     likes: body.likes,
     user: user._id
   })
-  const savedBlog = await blog.save()
     
   if (blog.url === undefined || blog.title === undefined) {
-    response.status(400).json({ error: 'url or title missing'})
-  } else {
-    user.blogs = user.blogs.concat(savedBlog._id)
-    await user.save()
-    response.status(201).json(savedBlog)
-  }
+    return response.status(400).json({ error: 'url or title missing'})
+  } 
+
+  const savedBlog = await blog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+  response.status(201).json(savedBlog)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  //console.log(blog.user)
 
   if (blog.user.toString() !== decodedToken.id.toString()) {
     return response.status(401).json({ error: 'token missing or invalid' })
