@@ -26,7 +26,7 @@ blogsRouter.post('/', async (request, response) => {
     user: user._id
   })
     
-  if (blog.url === undefined || blog.title === undefined) {
+  if (blog.url === '' || blog.title === '' || blog.url === undefined || blog.title === undefined) {
     return response.status(400).json({ error: 'url or title missing'})
   } 
 

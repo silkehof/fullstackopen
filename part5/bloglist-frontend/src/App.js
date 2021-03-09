@@ -3,7 +3,8 @@ import Blog from './components/Blog'
 import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
+import SuccessNotification from './components/SuccessNotification'
+import ErrorNotification from './components/ErrorNotification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +14,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -42,9 +45,21 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        setSuccessMessage(`Success! Blog "${title}" has been saved.`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
         setTitle('')
         setAuthor('')
         setUrl('')
+      })
+      .catch(error => {
+        setErrorMessage(
+          `Blog couldn't be saved, please try again!`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
   }
 
@@ -66,17 +81,24 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
 
-    const user = await loginService.login({
+    try {
+      const user = await loginService.login({
       username, password,
-    })
+      })
 
-    window.localStorage.setItem(
-      'loggedNoteappUser', JSON.stringify(user)
-    )
-    blogService.setToken(user.token)
-    setUser(user)
-    setUsername('')
-    setPassword('')
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      )
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      setErrorMessage('Wrong username or password!')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const loginForm = () => (
@@ -108,12 +130,17 @@ const App = () => {
     setUser(null)
     setUsername('')
     setPassword('')
+    setSuccessMessage('Logout was successful, until next time!')
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
   }
 
   return (
     <div>
       <h1>Blogs</h1>
-
+      <SuccessNotification message={successMessage} />
+      <ErrorNotification message={errorMessage} />
       {user === null ?
         loginForm() :
         <div>
@@ -132,10 +159,10 @@ const App = () => {
             handleAuthorChange={handleAuthorChange}
             url={url}
             handleUrlChange={handleUrlChange}
+            isButtonDisabled={title === '' || url === ''}
           />
         </div>
       }
-
     </div>
   )
 }

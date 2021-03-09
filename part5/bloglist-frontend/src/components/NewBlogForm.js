@@ -23,7 +23,7 @@ const NewBlogForm = (props) => {
             </div>
             <div>
                 <br></br>
-                <button type="submit">Save</button>
+                <button disabled={props.isButtonDisabled} type="submit">Save</button>
             </div>
         </form>
     )
