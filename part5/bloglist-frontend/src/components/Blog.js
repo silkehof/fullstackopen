@@ -15,12 +15,12 @@ const Blog = ({ blog }) => {
     background: '#B2ABF2'
   }
 
-  const buttonStyle = {
+  const likeButtonStyle = {
     marginLeft: 10,
-    color: '#EA3546'
+    color: '#618B25'
   }
 
-  const textStyle = {
+  const usernameStyle = {
     paddingBottom: 15
   }
 
@@ -49,9 +49,9 @@ const Blog = ({ blog }) => {
         {blog.url}
         <div>
           {blog.likes}
-          <button style={buttonStyle}>Like</button>
+          <button style={likeButtonStyle}>Like</button>
         </div>
-        <div style={textStyle}>Created by: {blog.user.username}</div>
+        <div style={usernameStyle}>Created by: {blog.user.username}</div>
         <button onClick={toggleVisibility}>Hide</button>
       </div>
     </div>
