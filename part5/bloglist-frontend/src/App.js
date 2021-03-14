@@ -14,6 +14,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+
   const blogFormRef = useRef()
 
   useEffect(() => {
@@ -120,14 +121,13 @@ const App = () => {
         <div>
           <button onClick={logoutUser}>Logout</button>
           <p>Welcome {user.name}, you are logged in!</p>
+          <Togglable buttonLabel="New blog entry" ref={blogFormRef}>
+            <NewBlogForm createBlog={addBlog} />
+          </Togglable>
           <h2>My saved blogs:</h2>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
-          <br></br>
-          <Togglable buttonLabel="New blog entry" ref={blogFormRef}>
-            <NewBlogForm createBlog={addBlog} />
-          </Togglable>
         </div>
       }
     </div>
