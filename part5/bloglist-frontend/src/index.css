@@ -8,14 +8,14 @@ h1 {
 }
 
 h2 {
-  color: #ED254E;
+  color: #F15025;
   font-weight: 900;
 }
 
 .success {
-  color: green;
+  color: #618B25;
   background: lightgrey;
-  font-size: 20px;
+  font-size: 16px;
   border-style: solid;
   border-radius: 5px;
   padding: 10px;
@@ -23,9 +23,9 @@ h2 {
 }
 
 .error {
-  color: red;
+  color: #ED254E;
   background: lightgrey;
-  font-size: 20px;
+  font-size: 16px;
   border-style: solid;
   border-radius: 5px;
   padding: 10px;

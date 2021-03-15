@@ -29,11 +29,13 @@ blogsRouter.post('/', async (request, response) => {
   if (blog.url === '' || blog.title === '' || blog.url === undefined || blog.title === undefined) {
     return response.status(400).json({ error: 'url or title missing'})
   } 
-
+  
   const savedBlog = await blog.save()
-  user.blogs = user.blogs.concat(savedBlog._id)
+  user.blogs = user.blogs.concat(savedBlog._id) 
   await user.save()
-  response.status(201).json(savedBlog)
+
+  const returnedBlog = await Blog.findById(blog.id).populate('user', { username: 1, name: 1 })
+  response.status(201).json(returnedBlog)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {

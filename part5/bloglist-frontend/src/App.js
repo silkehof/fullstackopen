@@ -62,6 +62,28 @@ const App = () => {
       })
   }
 
+  const deleteBlog = (id) => {
+    const blog = blogs.find(blog => blog.id === id)
+
+    if (window.confirm(`Delete ${blog.title}?`)) {
+      blogService
+        .remove(id)
+        .then(returnedBlog => {
+          setBlogs(blogs.filter(blog => blog.id !== id))
+          setSuccessMessage(`This worked! Blog has been deleted.`)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000)
+        })
+        .catch (error => {
+          setErrorMessage(`Sorry, blog couldn't be deleted,`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
+    }
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -137,7 +159,12 @@ const App = () => {
           </Togglable>
           <h2>My saved blogs:</h2>
           {blogs.sort(sortByLikes).map(blog =>
-            <Blog key={blog.id} blog={blog} likeBlog={addBlogLike} />
+            <Blog 
+              key={blog.id}
+              username={user.username}
+              blog={blog} 
+              likeBlog={addBlogLike} 
+              deleteBlog={deleteBlog} />
           )}
         </div>
       }

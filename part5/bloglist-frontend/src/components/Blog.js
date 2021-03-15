@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-const Blog = ({ blog, likeBlog }) => {
+const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -20,6 +20,14 @@ const Blog = ({ blog, likeBlog }) => {
     color: '#618B25'
   }
 
+  const hideButtonStyle = {
+    marginRight: 5,
+  }
+
+  const deletebuttonStyle = {
+    color: '#ED254E'
+  }
+
   const usernameStyle = {
     paddingBottom: 15
   }
@@ -33,7 +41,15 @@ const Blog = ({ blog, likeBlog }) => {
     paddingTop: 10,
     display: visible ? '' : 'none' 
   }
-  
+
+   const DeleteButton = () => {
+     if (blog.user.username === username) {
+       return <button style={deletebuttonStyle} onClick={deleteEntry}>Delete</button>
+      } else {
+        return null
+      }
+   }
+
   const toggleVisibility = () => {
     setVisible(!visible)
   }
@@ -46,6 +62,10 @@ const Blog = ({ blog, likeBlog }) => {
       title: blog.title,
       url: blog.url
     }, blog.id)
+  }
+
+  const deleteEntry = () => {
+    deleteBlog(blog.id)
   }
 
   return (
@@ -61,7 +81,8 @@ const Blog = ({ blog, likeBlog }) => {
           <button style={likeButtonStyle} onClick={addBlogLike}>Like</button>
         </div>
         <div style={usernameStyle}>Created by: {blog.user.name}</div>
-        <button onClick={toggleVisibility}>Hide</button>
+        <button style={hideButtonStyle} onClick={toggleVisibility}>Hide</button>
+        <DeleteButton></DeleteButton>
       </div>
     </div>
   )
