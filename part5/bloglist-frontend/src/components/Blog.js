@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
   const [visible, setVisible] = useState(false)
@@ -21,7 +21,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
   }
 
   const hideButtonStyle = {
-    marginRight: 5,
+    marginRight: 5
   }
 
   const deletebuttonStyle = {
@@ -32,23 +32,23 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
     paddingBottom: 15
   }
 
-  const hideWhenVisible = { 
+  const hideWhenVisible = {
     paddingTop: 10,
-    display: visible ? 'none' : '' 
+    display: visible ? 'none' : ''
   }
 
-  const showWhenVisible = { 
+  const showWhenVisible = {
     paddingTop: 10,
-    display: visible ? '' : 'none' 
+    display: visible ? '' : 'none'
   }
 
-   const DeleteButton = () => {
-     if (blog.user.username === username) {
-       return <button style={deletebuttonStyle} onClick={deleteEntry}>Delete</button>
-      } else {
-        return null
-      }
-   }
+  const DeleteButton = () => {
+    if (blog.user.username === username) {
+      return <button style={deletebuttonStyle} onClick={deleteEntry}>Delete</button>
+    } else {
+      return null
+    }
+  }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -71,7 +71,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
   return (
     <div style={blogStyle}>
       <div><strong>{blog.title}</strong> by {blog.author}</div>
-      <div style={hideWhenVisible}>
+      <div style={hideWhenVisible} >
         <button onClick={toggleVisibility}>View</button>
       </div>
       <div style={showWhenVisible}>

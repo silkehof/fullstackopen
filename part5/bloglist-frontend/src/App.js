@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import NewBlogForm from './components/NewBlogForm'
@@ -10,7 +11,7 @@ import Togglable from './components/Togglable'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('') 
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -20,7 +21,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const App = () => {
       })
       .catch(error => {
         setErrorMessage(
-          `Blog couldn't be saved, please try again!`
+          'Blog could not be saved, please try again!'
         )
         setTimeout(() => {
           setErrorMessage(null)
@@ -70,13 +71,13 @@ const App = () => {
         .remove(id)
         .then(returnedBlog => {
           setBlogs(blogs.filter(blog => blog.id !== id))
-          setSuccessMessage(`This worked! Blog has been deleted.`)
+          setSuccessMessage('This worked! Blog has been deleted.')
           setTimeout(() => {
             setSuccessMessage(null)
           }, 5000)
         })
         .catch (error => {
-          setErrorMessage(`Sorry, blog couldn't be deleted,`)
+          setErrorMessage('Sorry, blog could not be deleted!')
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
@@ -89,7 +90,7 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-      username, password,
+        username, password,
       })
 
       window.localStorage.setItem(
@@ -111,7 +112,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         Username:
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -120,7 +121,7 @@ const App = () => {
       </div>
       <div>
         Password:
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -159,11 +160,11 @@ const App = () => {
           </Togglable>
           <h2>My saved blogs:</h2>
           {blogs.sort(sortByLikes).map(blog =>
-            <Blog 
+            <Blog
               key={blog.id}
               username={user.username}
-              blog={blog} 
-              likeBlog={addBlogLike} 
+              blog={blog}
+              likeBlog={addBlogLike}
               deleteBlog={deleteBlog} />
           )}
         </div>
