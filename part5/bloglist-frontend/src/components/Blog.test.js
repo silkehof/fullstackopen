@@ -42,3 +42,26 @@ test('renders url and likes when view button is clicked', () => {
   expect(component.getByText(blog.url)).toBeVisible()
   expect(component.getByText(blog.likes.toString())).toBeVisible()
 })
+
+test('registers two likes if like button is clicked twice', () => {
+  const blog = {
+    author: 'Mr Knowitall',
+    title: 'Blog',
+    url: 'www.blog.de',
+    likes: 10,
+    user: '60468e0c254d186a90edbee1'
+  }
+
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <Blog blog={blog} likeBlog={mockHandler}/>
+  )
+
+  const button = component.getByText('Like')
+  fireEvent.click(button)
+  fireEvent.click(button)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
+})
+
