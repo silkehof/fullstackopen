@@ -34,24 +34,27 @@ const NewBlogForm = ({ createBlog }) => {
   const isButtonDisabled = (title === '' || url === '' )
 
   return (
-    <div>
+    <div className="formDiv">
       <h2>Create a new blog entry:</h2>
 
       <form onSubmit={addBlog}>
         <div>
                     Title: <input
+            id ='title'
             value={title}
             onChange={handleTitleChange}
           />
         </div>
         <div>
                     Author: <input
+            id='author'
             value={author}
             onChange={handleAuthorChange}
           />
         </div>
         <div>
                     Url: <input
+            id='url'
             value={url}
             onChange={handleUrlChange}
           />
