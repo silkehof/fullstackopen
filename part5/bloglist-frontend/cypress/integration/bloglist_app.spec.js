@@ -36,4 +36,20 @@ describe('Blog app', function () {
         .and('have.css', 'color', 'rgb(237, 37, 78)')
     })
   })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'mluukkai', password: 'salainen' })
+    })
+
+    it('A blog can be created', function () {
+      cy.contains('New blog entry').click()
+      cy.get('#title').type('How to write a blog')
+      cy.get('#author').type('Mr. Knowitall')
+      cy.get('#url').type('www.blog.fi')
+      cy.contains('Save').click()
+
+      cy.contains('How to write a blog')
+    })
+  })
 })
