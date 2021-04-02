@@ -52,7 +52,7 @@ describe('Blog app', function () {
       cy.contains('How to write a blog')
     })
 
-    describe('and a blog exists', function () {
+    describe('and a blog created by the logged in user exists', function () {
       beforeEach(function () {
         cy.createBlog({
           title: 'Test blog one',
@@ -67,6 +67,14 @@ describe('Blog app', function () {
 
         cy.get('.likes')
           .should('contain', '1')
+      })
+
+      it('it can be deleted', function () {
+        cy.contains('View').click()
+        cy.get('#delete-button').click()
+
+        cy.contains('Test blog one').should('not.exist')
+        cy.get('.success').should('contain', 'Blog has been deleted')
       })
     })
   })

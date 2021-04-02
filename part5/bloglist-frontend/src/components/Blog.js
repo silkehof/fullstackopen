@@ -44,7 +44,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
 
   const DeleteButton = () => {
     if (blog.user.username === username) {
-      return <button style={deletebuttonStyle} onClick={deleteEntry}>Delete</button>
+      return <button id ='delete-button' style={deletebuttonStyle} onClick={deleteEntry}>Delete</button>
     } else {
       return null
     }
@@ -70,7 +70,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
 
   return (
     <div className='blog' style={blogStyle}>
-      <div><strong>{blog.title}</strong> by {blog.author}</div>
+      <div className='blogtitle'><strong>{blog.title}</strong> by {blog.author}</div>
       <div style={hideWhenVisible} >
         <button onClick={toggleVisibility}>View</button>
       </div>
