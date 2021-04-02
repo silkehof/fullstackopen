@@ -76,6 +76,21 @@ describe('Blog app', function () {
         cy.contains('Test blog one').should('not.exist')
         cy.get('.success').should('contain', 'Blog has been deleted')
       })
+
+      it('it cannot be deleted by another user', function () {
+        cy.createUser({
+          name: 'Silke Hofmann',
+          username: 'silkeH',
+          password: 'test'
+        })
+
+        cy.contains('Logout').click()
+        cy.login({ username: 'silkeH', password: 'test' })
+
+        cy.contains('Test blog one')
+        cy.contains('View').click()
+        cy.get('#delete-button').should('not.exist')
+      })
     })
   })
 })
