@@ -76,9 +76,9 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
       </div>
       <div style={showWhenVisible}>
         {blog.url}
-        <div>
+        <div className='likes'>
           {blog.likes}
-          <button style={likeButtonStyle} onClick={addBlogLike}>Like</button>
+          <button id='like-button' style={likeButtonStyle} onClick={addBlogLike}>Like</button>
         </div>
         <div style={usernameStyle}>Created by: {blog.user.name}</div>
         <button style={hideButtonStyle} onClick={toggleVisibility}>Hide</button>
