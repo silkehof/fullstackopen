@@ -161,14 +161,16 @@ const App = () => {
             <NewBlogForm createBlog={addBlog} />
           </Togglable>
           <h2>My saved blogs:</h2>
-          {blogs.sort(sortByLikes).map(blog =>
-            <Blog
-              key={blog.id}
-              username={user.username}
-              blog={blog}
-              likeBlog={addBlogLike}
-              deleteBlog={deleteBlog} />
-          )}
+          <div className='bloglist'>
+            {blogs.sort(sortByLikes).map(blog =>
+              <Blog
+                key={blog.id}
+                username={user.username}
+                blog={blog}
+                likeBlog={addBlogLike}
+                deleteBlog={deleteBlog} />
+            )}
+          </div>
         </div>
       }
     </div>

@@ -92,5 +92,46 @@ describe('Blog app', function () {
         cy.get('#delete-button').should('not.exist')
       })
     })
+
+    describe('and several blog entries exist', function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: 'Test blog one',
+          author: 'Mr Best Author',
+          url: 'www.testblog.de',
+          likes: 2
+        })
+        cy.createBlog({
+          title: 'Test blog two',
+          author: 'Mr Best Author',
+          url: 'www.testblog2.de'
+        })
+        cy.createBlog({
+          title: 'Test blog three',
+          author: 'Mr Best Author',
+          url: 'www.testblog3.de',
+          likes: 3
+        })
+      })
+
+      it.only('the blogs are sorted according to likes in decending order', function () {
+        cy.get('.bloglist').within(() => {
+          cy.get('.blog').eq(0).contains('Test blog three')
+          cy.get('.blog').eq(1).contains('Test blog one')
+          cy.get('.blog').eq(2).contains('Test blog two')
+
+          cy.get('.blog').eq(1).within(() => {
+            cy.contains('View').click()
+            cy.get('#like-button').click()
+            cy.get('#like-button').click()
+          })
+
+          cy.wait(1000)
+          cy.get('.blog').eq(0).contains('Test blog one')
+          cy.get('.blog').eq(1).contains('Test blog three')
+          cy.get('.blog').eq(2).contains('Test blog two')
+        })
+      })
+    })
   })
 })
