@@ -40,6 +40,7 @@ const AnecdoteList = () => {
     <div>
       {anecdotes.map(anecdote =>
         <Anecdote
+          key={anecdote.id}
           anecdote={anecdote}
           handleClick={() => handleAll(dispatch, anecdote.id, anecdote.content)}
         />
