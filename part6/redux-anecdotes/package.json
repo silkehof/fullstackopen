@@ -25,7 +25,10 @@
       "react-app/jest"
     ],
     "rules": {
-      "indent": ["warn", 2]
+      "indent": [
+        "warn",
+        2
+      ]
     }
   },
   "browserslist": {
@@ -39,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "redux-devtools-extension": "^2.13.9"
   }
 }
