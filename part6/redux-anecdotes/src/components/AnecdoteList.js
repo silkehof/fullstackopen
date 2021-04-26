@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
 import { showAndHideNotification } from '../reducers/notificationReducer'
 
-const handleAll = (dispatch, id, message) => {
-  dispatch(voteAnecdote(id))
-  const fullMessage = `You have voted for: ${message}`
+const handleAll = (dispatch, anecdote) => {
+  dispatch(voteAnecdote(anecdote))
+  const fullMessage = `You have voted for: ${anecdote.content}`
   showAndHideNotification(dispatch, fullMessage)
 }
 
@@ -20,7 +20,6 @@ const Anecdote = ({ anecdote, handleClick }) => {
         <button onClick={handleClick}>vote</button>
       </div>
     </div>
-
   )
 }
 
@@ -42,7 +41,7 @@ const AnecdoteList = () => {
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
-          handleClick={() => handleAll(dispatch, anecdote.id, anecdote.content)}
+          handleClick={() => handleAll(dispatch, anecdote)}
         />
       )}
     </div>
