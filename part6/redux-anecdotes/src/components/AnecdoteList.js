@@ -7,7 +7,6 @@ const handleAll = (dispatch, anecdote) => {
   dispatch(voteAnecdote(anecdote))
   const message = `You have voted for: ${anecdote.content}`
   dispatch(showAndHideNotification(message, 10))
-  //showAndHideNotification(dispatch, fullMessage)
 }
 
 const Anecdote = ({ anecdote, handleClick }) => {
