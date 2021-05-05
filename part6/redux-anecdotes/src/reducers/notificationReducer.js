@@ -11,10 +11,15 @@ const notificationReducer = (state = initialState, action) => {
   }
 }
 
+let timer
+
 export const showAndHideNotification = (message, seconds) => {
   return async dispatch => {
+    if (timer) {
+      clearTimeout(timer)
+    }
     dispatch({ type: 'NOTIFICATION_ON', data: message })
-    setTimeout(() => dispatch({ type: 'NOTIFICATION_OFF' }), seconds * 1000)
+    timer = setTimeout(() => dispatch({ type: 'NOTIFICATION_OFF' }), seconds * 1000)
   }
 }
 

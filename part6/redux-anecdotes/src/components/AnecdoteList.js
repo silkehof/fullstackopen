@@ -6,7 +6,7 @@ import { showAndHideNotification } from '../reducers/notificationReducer'
 const handleAll = (dispatch, anecdote) => {
   dispatch(voteAnecdote(anecdote))
   const message = `You have voted for: ${anecdote.content}`
-  dispatch(showAndHideNotification(message, 10))
+  dispatch(showAndHideNotification(message, 5))
 }
 
 const Anecdote = ({ anecdote, handleClick }) => {
