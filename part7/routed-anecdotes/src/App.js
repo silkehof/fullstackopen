@@ -5,7 +5,8 @@ import {
   Route,
   Link,
   useRouteMatch,
-  Redirect
+  Redirect,
+  useHistory
 } from "react-router-dom"
 
 
@@ -85,6 +86,7 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -94,6 +96,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    history.push("/")
   }
 
   return (
@@ -116,7 +119,6 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
-
 }
 
 const App = () => {
@@ -138,7 +140,6 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
-  const [submitted, setSubmitted] = useState(false)
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
@@ -147,10 +148,6 @@ const App = () => {
     setTimeout(() => {
           setNotification('')
         }, 10000)
-    setSubmitted(true)
-    setTimeout(() => {
-          setSubmitted(false)
-        }, 3000)
   }
 
   const anecdoteById = (id) =>
@@ -173,7 +170,6 @@ const App = () => {
     : null
   console.log(anecdote)
 
-
   return (
     <div>
       <Notification notification={notification}/>
@@ -189,7 +185,7 @@ const App = () => {
           <Anecdote anecdote={anecdote} />
         </Route>
         <Route path="/create">
-          {submitted ? <Redirect to="/" /> : <CreateNew addNew={addNew} />}
+          <CreateNew addNew={addNew} />
         </Route>
         <Route path="/">
           <AnecdoteList anecdotes={anecdotes} />
