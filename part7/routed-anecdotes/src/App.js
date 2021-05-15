@@ -4,7 +4,8 @@ import {
   Switch,
   Route,
   Link,
-  useRouteMatch
+  useRouteMatch,
+  Redirect
 } from "react-router-dom"
 
 
@@ -17,6 +18,18 @@ const Menu = () => {
       <Link style={padding} to="/">Anecdotes</Link>
       <Link style={padding} to="/create">Create new</Link>
       <Link style={padding} to="/about">About</Link>
+    </div>
+  )
+}
+
+const Notification = ({notification}) => {
+  if (notification === '') {
+    return null
+  }
+
+  return (
+    <div>
+      {notification}
     </div>
   )
 }
@@ -125,10 +138,19 @@ const App = () => {
   ])
 
   const [notification, setNotification] = useState('')
+  const [submitted, setSubmitted] = useState(false)
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification('You have added a new anecdote!')
+    setTimeout(() => {
+          setNotification('')
+        }, 10000)
+    setSubmitted(true)
+    setTimeout(() => {
+          setSubmitted(false)
+        }, 3000)
   }
 
   const anecdoteById = (id) =>
@@ -154,6 +176,8 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification}/>
+
       <h1>Software Anecdotes</h1>
 
       <div>
@@ -165,7 +189,7 @@ const App = () => {
           <Anecdote anecdote={anecdote} />
         </Route>
         <Route path="/create">
-          <CreateNew addNew={addNew} />
+          {submitted ? <Redirect to="/" /> : <CreateNew addNew={addNew} />}
         </Route>
         <Route path="/">
           <AnecdoteList anecdotes={anecdotes} />
