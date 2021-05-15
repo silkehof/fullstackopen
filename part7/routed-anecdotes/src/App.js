@@ -85,9 +85,9 @@ const CreateNew = (props) => {
   //const [content, setContent] = useState('')
   //const [author, setAuthor] = useState('')
   //const [info, setInfo] = useState('')
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('text')
+  const { reset: resetContent, ...content } = useField('text')
+  const { reset: resetAuthor, ...author } = useField('text')
+  const { reset: resetInfo, ...info } = useField('text')
 
   const history = useHistory()
 
@@ -100,6 +100,13 @@ const CreateNew = (props) => {
       votes: 0
     })
     history.push("/")
+  }
+
+  const handleClick = (e) => {
+    e.preventDefault()
+    resetContent()
+    resetAuthor()
+    resetInfo()
   }
 
   return (
@@ -116,6 +123,7 @@ const CreateNew = (props) => {
           <input {...info} />
           <br />
         <button>Create</button>
+        <button onClick={handleClick}>Clear</button>
       </form>
     </div>
   )
