@@ -1,6 +1,7 @@
   
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { Table, Form, Button } from 'react-bootstrap'
 
 
 const useField = (type) => {
@@ -64,21 +65,38 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h2>notes</h2>
-      <form onSubmit={handleNoteSubmit}>
+    <div className="container">
+      <h2>Notes</h2>
+      <Form onSubmit={handleNoteSubmit}>
         <input {...content} />
-        <button>create</button>
-      </form>
-      {notes.map(n => <p key={n.id}>{n.content}</p>)}
+        <button>Create</button>
+      </Form>
+      <Table striped>
+        <tbody>
+          {notes.map(n =>
+            <tr key={n.id}>
+              <td>{n.content}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
 
-      <h2>persons</h2>
+      <h2>Persons</h2>
       <form onSubmit={handlePersonSubmit}>
-        name <input {...name} /> <br/>
-        number <input {...number} />
-        <button>create</button>
+        Name: <input {...name} /> <br/>
+        Number: <input {...number} />
+        <button>Create</button>
       </form>
-      {persons.map(n => <p key={n.id}>{n.name} {n.number}</p>)}
+      <Table striped>
+        <tbody>
+          {persons.map(n =>
+            <tr key={n.id}>
+              <td>{n.name}</td>
+              <td>{n.number}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   )
 }
