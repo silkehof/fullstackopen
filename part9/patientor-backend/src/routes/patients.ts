@@ -8,6 +8,16 @@ patientsRouter.get("/", (_req, res) => {
   res.send(patientsService.getNonSensitivePatientEntries());
 });
 
+patientsRouter.get("/:id", (req, res) => {
+  const patient = patientsService.findPatientById(String(req.params.id));
+
+  if (patient) {
+    res.send(patient);
+  } else {
+    res.sendStatus(404);
+  }
+});
+
 patientsRouter.post("/", (req, res) => {
   try {
     const newPatientEntry = toNewPatientEntry(req.body);
