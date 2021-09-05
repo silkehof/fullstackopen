@@ -1,4 +1,4 @@
-import { NewPatientEntry, Gender, Fields } from "./types";
+import { NewPatientEntry, Gender, Fields, Entry } from "./types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -51,15 +51,33 @@ const parseGender = (gender: unknown): Gender => {
   return gender;
 };
 
+const parseEntries = (entries: unknown): Entry[] => {
+  if (!entries || !Array.isArray(entries)) {
+    throw new Error("Missing entries");
+  }
 
-const toNewPatientEntry = ({name, dateOfBirth, ssn, gender, occupation } : Fields): NewPatientEntry => {
+  if (entries === []) {
+    return [];
+  }
+
+  const entryTypes = ["HealthCheck", "OccupationalHealthcare", "Hospital"];
+
+  entries.forEach(entry => {
+    if (!entryTypes.includes(entry.type)) {
+      throw new Error("Entry is incorrectly formatted");
+    }
+  });
+  return entries as Entry[];
+};
+
+const toNewPatientEntry = ({name, dateOfBirth, ssn, gender, occupation, entries} : Fields): NewPatientEntry => {
   const newEntry: NewPatientEntry = {
     name: parseName(name),
     dateOfBirth: parseDateOfBirth(dateOfBirth),
     ssn: parseSsn(ssn),
     gender: parseGender(gender),
     occupation: parseOccupation(occupation),
-    entries: [],
+    entries: parseEntries(entries)
   };
 
   return newEntry;
